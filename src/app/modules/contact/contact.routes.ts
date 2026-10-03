@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { ContactController } from './contact.controller.js';
+import { auth } from '../../middlewares/auth.js';
+import { validateRequest } from '../../middlewares/validateRequest.js';
+import { ContactValidation } from './contact.validation.js';
+import { contactLimiter } from '../../middlewares/rateLimiter.js';
+const publicRouter = Router();
+publicRouter.post('/', contactLimiter, validateRequest(ContactValidation.createSchema), ContactController.createContact);
+const adminRouter = Router();
+adminRouter.get('/', auth(), ContactController.getAdminContacts);
+adminRouter.patch('/:id', auth(), ContactController.updateContactStatus);
+export const ContactRoutes = { publicRouter, adminRouter };

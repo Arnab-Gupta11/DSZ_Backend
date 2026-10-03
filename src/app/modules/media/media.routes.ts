@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import multer from 'multer';
+import { MediaController } from './media.controller.js';
+import { auth } from '../../middlewares/auth.js';
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 50 * 1024 * 1024 } });
+const adminRouter = Router();
+adminRouter.post('/upload', auth(), upload.single('file'), MediaController.uploadMedia);
+adminRouter.get('/', auth(), MediaController.getAllMedia);
+adminRouter.delete('/:publicId', auth(), MediaController.deleteMedia);
+export const MediaRoutes = { adminRouter };

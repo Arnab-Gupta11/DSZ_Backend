@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { SettingsController } from './settings.controller.js';
+import { auth } from '../../middlewares/auth.js';
+import { validateRequest } from '../../middlewares/validateRequest.js';
+import { SettingsValidation } from './settings.validation.js';
+const publicRouter = Router();
+publicRouter.get('/', SettingsController.getSettings);
+const adminRouter = Router();
+adminRouter.get('/', auth(), SettingsController.getSettings);
+adminRouter.put('/', auth(), validateRequest(SettingsValidation.updateSchema), SettingsController.updateSettings);
+export const SettingsRoutes = { publicRouter, adminRouter };

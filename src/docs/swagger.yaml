@@ -1,0 +1,739 @@
+openapi: 3.0.0
+info:
+  title: DSZ API
+  version: 1.0.0
+  description: Complete Production Backend API Documentation for Digital Soft Zone
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+  schemas:
+    PaginationMeta:
+      type: object
+      properties:
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+        totalPages: { type: integer }
+        hasNextPage: { type: boolean }
+        hasPreviousPage: { type: boolean }
+    
+    SeoMetadata:
+      type: object
+      properties:
+        metaTitle: { type: string }
+        metaDescription: { type: string }
+        ogImage: { type: string }
+        canonicalUrl: { type: string }
+        noIndex: { type: boolean, default: false }
+
+    WorkBody:
+      type: object
+      example:
+        title: "Fragrance Launch"
+        client: "Aroma Corp"
+        industry: "Retail"
+        services: ["Brand Identity", "Digital Campaign"]
+        categories: ["Branding", "Marketing"]
+        result: "+45% Engagement"
+        year: "2024"
+        image: "https://res.cloudinary.com/...jpg"
+        imageAlt: "Fragrance Bottle"
+        imagePublicId: "dsz/works/fragrance"
+        summary: "Detailed summary of the project..."
+        challenge: "The challenge was..."
+        strategy: "Our strategy focused on..."
+        execution: "Execution phase..."
+        executionPoints: ["Point 1", "Point 2"]
+        results: [{ value: "+45%", label: "Conversion" }]
+        gallery: [{ src: "https://res...", alt: "Img 1", publicId: "id1" }]
+        status: "PUBLISHED"
+        seo: { metaTitle: "Fragrance Launch SEO Title", metaDescription: "Description here", noIndex: false }
+      properties:
+        title: { type: string }
+        client: { type: string }
+        industry: { type: string }
+        services: 
+          type: array
+          items: { type: string }
+        categories:
+          type: array
+          items: 
+            type: string
+            enum: ['Branding', 'Marketing', 'Design', 'Video', 'Web/App', 'Automation']
+        result: { type: string }
+        year: { type: string }
+        image: { type: string, description: "Cloudinary URL" }
+        imageAlt: { type: string }
+        imagePublicId: { type: string }
+        summary: { type: string }
+        challenge: { type: string }
+        strategy: { type: string }
+        execution: { type: string }
+        executionPoints:
+          type: array
+          items: { type: string }
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              value: { type: string }
+              label: { type: string }
+        gallery:
+          type: array
+          items:
+            type: object
+            properties:
+              src: { type: string }
+              alt: { type: string }
+              publicId: { type: string }
+        status: { type: string, enum: [DRAFT, PUBLISHED, ARCHIVED] }
+        seo: { $ref: '#/components/schemas/SeoMetadata' }
+
+    ArticleBody:
+      type: object
+      example:
+        title: "Instagram Content That Sells"
+        category: "Marketing Tips"
+        excerpt: "Learn how to create content that converts."
+        image: "https://res.cloudinary.com/...jpg"
+        imageAlt: "Instagram Strategy"
+        imagePublicId: "dsz/articles/insta"
+        author: "DSZ Team"
+        body: [
+          { type: "p", text: "Introduction text here" },
+          { type: "h2", text: "Main Strategy" },
+          { type: "list", items: ["Point A", "Point B"] }
+        ]
+        readTime: "5 min read"
+        status: "PUBLISHED"
+        seo: { metaTitle: "SEO Title", metaDescription: "Description", noIndex: false }
+      properties:
+        title: { type: string }
+        category: 
+          type: string
+          enum: ['Marketing Tips', 'AI Tools', 'Case Studies', 'DSZ News']
+        excerpt: { type: string }
+        image: { type: string, description: "Cloudinary URL" }
+        imageAlt: { type: string }
+        imagePublicId: { type: string }
+        author: { type: string }
+        body:
+          type: array
+          description: "Array of structured blocks (p, h2, quote, list)"
+          items:
+            type: object
+            properties:
+              type: { type: string, enum: [p, h2, quote, list] }
+              text: { type: string }
+              items: 
+                type: array
+                items: { type: string }
+        readTime: { type: string }
+        status: { type: string, enum: [DRAFT, PUBLISHED, ARCHIVED] }
+        seo: { $ref: '#/components/schemas/SeoMetadata' }
+
+    ServiceBody:
+      type: object
+      example:
+        number: "01"
+        title: "Brand Strategy"
+        category: "Branding"
+        short: "Build a lasting brand."
+        description: "Full description of service"
+        whatWeDo: ["Identity", "Positioning"]
+        deliverables: ["Logo", "Brand Book"]
+        whoFor: "Startups"
+        iconName: "Compass"
+        visual: "brand"
+        status: "PUBLISHED"
+        seo: { metaTitle: "Service SEO", metaDescription: "Description", noIndex: false }
+      properties:
+        number: { type: string }
+        title: { type: string }
+        category: { type: string }
+        short: { type: string }
+        description: { type: string }
+        whatWeDo:
+          type: array
+          items: { type: string }
+        deliverables:
+          type: array
+          items: { type: string }
+        whoFor: { type: string }
+        iconName: { type: string }
+        visual: { type: string, enum: ['brand', 'marketing', 'design', 'video', 'web', 'automation'] }
+        status: { type: string, enum: [DRAFT, PUBLISHED, ARCHIVED] }
+        seo: { $ref: '#/components/schemas/SeoMetadata' }
+
+    TestimonialBody:
+      type: object
+      example:
+        quote: "DSZ transformed our business!"
+        name: "John Doe"
+        company: "TechFlow"
+        role: "CEO"
+        initials: "JD"
+        isActive: true
+        order: 1
+      properties:
+        quote: { type: string }
+        name: { type: string }
+        company: { type: string }
+        role: { type: string }
+        initials: { type: string }
+        isActive: { type: boolean, default: true }
+        order: { type: integer }
+
+    ContactBody:
+      type: object
+      example:
+        name: "Alice"
+        contact: "alice@example.com"
+        need: "Web Development"
+        message: "I need an ecommerce site."
+      required: [name, contact, need, message]
+      properties:
+        name: { type: string }
+        contact: { type: string }
+        need: { type: string }
+        message: { type: string }
+
+  parameters:
+    pageParam:
+      in: query
+      name: page
+      schema: { type: integer, default: 1 }
+      description: "Page number"
+    limitParam:
+      in: query
+      name: limit
+      schema: { type: integer, default: 10 }
+      description: "Items per page (max 100)"
+    searchParam:
+      in: query
+      name: search
+      schema: { type: string }
+      description: "Search term"
+    sortParam:
+      in: query
+      name: sort
+      schema: { type: string, example: "-createdAt" }
+      description: "Sort by field (prefix with - for descending)"
+    statusParam:
+      in: query
+      name: status
+      schema: { type: string, enum: [DRAFT, PUBLISHED, ARCHIVED] }
+      description: "Filter by status"
+
+paths:
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, example: "admin@digitalsoftzone.com" }
+                password: { type: string, example: "password123" }
+      responses:
+        200:
+          description: Logged in successfully. Returns JWT in HTTP-only cookie.
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Admin logout (clears cookie)
+      responses:
+        200: { description: OK }
+  /api/v1/auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current logged-in admin
+      security: [{ cookieAuth: [] }]
+      responses:
+        200: { description: Admin profile }
+
+  # --- WORKS ---
+  /api/v1/works:
+    get:
+      tags: [Public Work]
+      summary: List all PUBLISHED works
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/components/parameters/sortParam'
+        - in: query
+          name: category
+          schema: { type: string }
+          description: "Filter by Service Category"
+      responses:
+        200:
+          description: Paginated works
+  /api/v1/works/{slug}:
+    get:
+      tags: [Public Work]
+      summary: Get a single PUBLISHED work by slug
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Work data }
+
+  /api/v1/admin/works:
+    get:
+      tags: [Admin Work]
+      summary: List all works (any status)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/statusParam'
+      responses:
+        200: { description: Paginated works }
+    post:
+      tags: [Admin Work]
+      summary: Create a new work
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WorkBody' }
+      responses:
+        201: { description: Work created }
+  
+  /api/v1/admin/works/{id}:
+    get:
+      tags: [Admin Work]
+      summary: Get work by ID
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Work data }
+    patch:
+      tags: [Admin Work]
+      summary: Update a work
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WorkBody' }
+      responses:
+        200: { description: Work updated }
+    delete:
+      tags: [Admin Work]
+      summary: Delete a work
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Work deleted }
+        
+  /api/v1/admin/works/{id}/reorder:
+    patch:
+      tags: [Admin Work]
+      summary: Update work display order
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                order: { type: integer, example: 1 }
+      responses:
+        200: { description: Order updated }
+
+  # --- ARTICLES ---
+  /api/v1/articles:
+    get:
+      tags: [Public Article]
+      summary: List all PUBLISHED articles
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/components/parameters/sortParam'
+        - in: query
+          name: category
+          schema: { type: string }
+          description: "Filter by Article Category"
+      responses:
+        200: { description: Paginated articles }
+  /api/v1/articles/{slug}:
+    get:
+      tags: [Public Article]
+      summary: Get single PUBLISHED article
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Article data }
+  
+  /api/v1/admin/articles:
+    get:
+      tags: [Admin Article]
+      summary: List all articles (any status)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/statusParam'
+      responses:
+        200: { description: Paginated articles }
+    post:
+      tags: [Admin Article]
+      summary: Create an article
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ArticleBody' }
+      responses:
+        201: { description: Article created }
+  /api/v1/admin/articles/{id}:
+    patch:
+      tags: [Admin Article]
+      summary: Update an article
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ArticleBody' }
+      responses:
+        200: { description: Article updated }
+    delete:
+      tags: [Admin Article]
+      summary: Delete an article
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Article deleted }
+
+  # --- SERVICES ---
+  /api/v1/services:
+    get:
+      tags: [Public Service]
+      summary: List all PUBLISHED services
+      parameters:
+        - $ref: '#/components/parameters/sortParam'
+      responses:
+        200: { description: List of services }
+  
+  /api/v1/admin/services:
+    get:
+      tags: [Admin Service]
+      summary: List all services
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/sortParam'
+      responses:
+        200: { description: List of services }
+    post:
+      tags: [Admin Service]
+      summary: Create a service
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ServiceBody' }
+      responses:
+        201: { description: Service created }
+  /api/v1/admin/services/{id}:
+    patch:
+      tags: [Admin Service]
+      summary: Update a service
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ServiceBody' }
+      responses:
+        200: { description: Service updated }
+    delete:
+      tags: [Admin Service]
+      summary: Delete a service
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Service deleted }
+
+  # --- TESTIMONIALS ---
+  /api/v1/testimonials:
+    get:
+      tags: [Public Testimonial]
+      summary: List active testimonials
+      parameters:
+        - $ref: '#/components/parameters/sortParam'
+      responses:
+        200: { description: Testimonials retrieved }
+
+  /api/v1/admin/testimonials:
+    get:
+      tags: [Admin Testimonial]
+      summary: List all testimonials
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/sortParam'
+      responses:
+        200: { description: Testimonials retrieved }
+    post:
+      tags: [Admin Testimonial]
+      summary: Create a testimonial
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TestimonialBody' }
+      responses:
+        201: { description: Testimonial created }
+  /api/v1/admin/testimonials/{id}:
+    patch:
+      tags: [Admin Testimonial]
+      summary: Update a testimonial
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TestimonialBody' }
+      responses:
+        200: { description: Testimonial updated }
+    delete:
+      tags: [Admin Testimonial]
+      summary: Delete a testimonial
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Testimonial deleted }
+
+  # --- MEDIA (FILE UPLOAD) ---
+  /api/v1/admin/media/upload:
+    post:
+      tags: [Admin Media]
+      summary: Upload a file to Cloudinary
+      description: "Upload file here to get the URL, then pass it to Work/Article endpoints."
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                folder:
+                  type: string
+                  example: "dsz/works"
+      responses:
+        201: 
+          description: File uploaded successfully
+  /api/v1/admin/media:
+    get:
+      tags: [Admin Media]
+      summary: List uploaded media
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        200: { description: Media retrieved }
+  /api/v1/admin/media/{publicId}:
+    delete:
+      tags: [Admin Media]
+      summary: Delete media by publicId
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: publicId
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Media deleted }
+
+  # --- CONTACT ---
+  /api/v1/contact:
+    post:
+      tags: [Public Contact]
+      summary: Submit a contact inquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ContactBody' }
+      responses:
+        201: { description: Message sent successfully }
+
+  /api/v1/admin/contacts:
+    get:
+      tags: [Admin Contact]
+      summary: List contact submissions
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - in: query
+          name: status
+          schema: { type: string, enum: [NEW, READ, REPLIED, ARCHIVED] }
+      responses:
+        200: { description: Contacts retrieved }
+  /api/v1/admin/contacts/{id}:
+    patch:
+      tags: [Admin Contact]
+      summary: Update contact status
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: { status: "READ" }
+              properties:
+                status: { type: string, enum: [NEW, READ, REPLIED, ARCHIVED] }
+      responses:
+        200: { description: Status updated }
+
+  # --- SETTINGS ---
+  /api/v1/settings:
+    get:
+      tags: [Public Settings]
+      summary: Get public site settings
+      responses:
+        200: { description: Settings retrieved }
+          
+  /api/v1/admin/settings:
+    get:
+      tags: [Admin Settings]
+      summary: Get full settings config
+      security: [{ cookieAuth: [] }]
+      responses:
+        200: { description: Settings retrieved }
+    put:
+      tags: [Admin Settings]
+      summary: Update settings (upsert)
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                siteName: "Digital Soft Zone"
+                email: "admin@digitalsoftzone.com"
+                phone: "+8801..."
+                whatsappNumber: "+8801..."
+                whatsappUrl: "https://wa.me/..."
+                addressLine: "Software Park"
+                city: "Chittagong"
+                socialLinks: [{ key: "facebook", label: "FB", href: "..." }]
+              properties:
+                siteName: { type: string }
+                email: { type: string }
+                phone: { type: string }
+                whatsappNumber: { type: string }
+                whatsappUrl: { type: string }
+                addressLine: { type: string }
+                city: { type: string }
+                logoUrl: { type: string }
+                socialLinks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      key: { type: string, enum: [instagram, facebook, linkedin, x, youtube] }
+                      label: { type: string }
+                      href: { type: string }
+      responses:
+        200: { description: Settings updated }
+
+  # --- HEALTH ---
+  /health:
+    get:
+      tags: [Health]
+      summary: App server health
+      responses:
+        200: { description: OK }
+  /health/ready:
+    get:
+      tags: [Health]
+      summary: Database connection health
+      responses:
+        200: { description: DB Ready }

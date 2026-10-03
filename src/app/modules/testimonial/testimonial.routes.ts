@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { TestimonialController } from './testimonial.controller.js';
+import { auth } from '../../middlewares/auth.js';
+const publicRouter = Router();
+publicRouter.get('/', TestimonialController.getPublicTestimonials);
+const adminRouter = Router();
+adminRouter.post('/', auth(), TestimonialController.createTestimonial);
+adminRouter.get('/', auth(), TestimonialController.getAdminTestimonials);
+adminRouter.patch('/:id', auth(), TestimonialController.updateTestimonial);
+adminRouter.delete('/:id', auth(), TestimonialController.deleteTestimonial);
+export const TestimonialRoutes = { publicRouter, adminRouter };

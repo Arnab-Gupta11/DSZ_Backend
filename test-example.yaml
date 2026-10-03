@@ -1,0 +1,29 @@
+components:
+  schemas:
+    WorkBody:
+      type: object
+      example:
+        title: "Fragrance Launch"
+        client: "Aroma Corp"
+        industry: "Retail"
+        services: ["Brand Identity", "Digital Campaign"]
+        categories: ["Branding", "Marketing"]
+        result: "+45% Engagement"
+        year: "2024"
+        image: "https://res.cloudinary.com/...jpg"
+        imageAlt: "Fragrance Bottle"
+        imagePublicId: "dsz/works/fragrance"
+        summary: "Detailed summary..."
+        challenge: "The challenge was..."
+        strategy: "Our strategy..."
+        execution: "Execution phase..."
+        executionPoints: ["Point 1", "Point 2"]
+        results: [{ value: "+45%", label: "Conversion" }]
+        gallery: [{ src: "https://res...", alt: "Img 1", publicId: "id1" }]
+        status: "PUBLISHED"
+        seo:
+          metaTitle: "Fragrance Launch SEO Title"
+          metaDescription: "Description here"
+          noIndex: false
+      properties:
+        title: { type: string }
