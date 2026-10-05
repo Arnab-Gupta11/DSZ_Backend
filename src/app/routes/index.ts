@@ -7,6 +7,8 @@ import { TestimonialRoutes } from '../modules/testimonial/testimonial.routes.js'
 import { ContactRoutes } from '../modules/contact/contact.routes.js';
 import { SettingsRoutes } from '../modules/settings/settings.routes.js';
 import { MediaRoutes } from '../modules/media/media.routes.js';
+import { JobRoutes } from '../modules/job/job.routes.js';
+import { JobApplicationRoutes } from '../modules/jobApplication/jobApplication.routes.js';
 
 const router = Router();
 
@@ -25,6 +27,10 @@ const moduleRoutes = [
   { path: '/settings', route: SettingsRoutes.publicRouter },
   { path: '/admin/settings', route: SettingsRoutes.adminRouter },
   { path: '/admin/media', route: MediaRoutes.adminRouter },
+  { path: '/jobs', route: JobRoutes.publicRouter },
+  { path: '/admin/jobs', route: JobRoutes.adminRouter },
+  { path: '/jobs', route: JobApplicationRoutes.publicRouter },
+  { path: '/admin/job-applications', route: JobApplicationRoutes.adminRouter },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

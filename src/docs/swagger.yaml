@@ -202,6 +202,46 @@ components:
         need: { type: string }
         message: { type: string }
 
+
+    JobBody:
+      type: object
+      example:
+        title: "Frontend Engineer"
+        department: "Development"
+        type: "Full-time"
+        location: "Remote"
+        city: "Dhaka"
+        experience: "2+ Years"
+        salary: "Competitive"
+        postedAt: "2024-03-10T10:00:00.000Z"
+        deadline: "2024-04-10T10:00:00.000Z"
+        short: "Join our team to build next-gen web apps."
+        overview: "Detailed overview here..."
+        responsibilities: ["Develop UI", "Integrate APIs"]
+        requirements: ["React", "TypeScript"]
+        niceToHave: ["Next.js"]
+        tools: ["VS Code", "Git"]
+        benefits: ["Remote Work", "Health Insurance"]
+        status: "PUBLISHED"
+      properties:
+        title: { type: string }
+        department: { type: string, enum: [Development, Design, Marketing, Video, Operations] }
+        type: { type: string, enum: [Full-time, Part-time, Internship, Contract] }
+        location: { type: string, enum: [On-site, Remote, Hybrid] }
+        city: { type: string }
+        experience: { type: string }
+        salary: { type: string }
+        postedAt: { type: string, format: date-time }
+        deadline: { type: string, format: date-time }
+        short: { type: string }
+        overview: { type: string }
+        responsibilities: { type: array, items: { type: string } }
+        requirements: { type: array, items: { type: string } }
+        niceToHave: { type: array, items: { type: string } }
+        tools: { type: array, items: { type: string } }
+        benefits: { type: array, items: { type: string } }
+        status: { type: string, enum: [DRAFT, PUBLISHED, ARCHIVED] }
+
   parameters:
     pageParam:
       in: query
@@ -737,3 +777,171 @@ paths:
       summary: Database connection health
       responses:
         200: { description: DB Ready }
+
+  # --- JOBS ---
+  /api/v1/jobs:
+    get:
+      tags: [Public Job]
+      summary: List all PUBLISHED jobs
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/components/parameters/sortParam'
+      responses:
+        200: { description: Paginated jobs }
+  /api/v1/jobs/{slug}:
+    get:
+      tags: [Public Job]
+      summary: Get single PUBLISHED job by slug
+      parameters:
+        - in: path
+          name: slug
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Job data }
+
+  /api/v1/admin/jobs:
+    get:
+      tags: [Admin Job]
+      summary: List all jobs (any status)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/searchParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/statusParam'
+      responses:
+        200: { description: Paginated jobs }
+    post:
+      tags: [Admin Job]
+      summary: Create a new job
+      security: [{ cookieAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/JobBody' }
+      responses:
+        201: { description: Job created }
+  
+  /api/v1/admin/jobs/{id}:
+    get:
+      tags: [Admin Job]
+      summary: Get job by ID
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Job data }
+    patch:
+      tags: [Admin Job]
+      summary: Update a job
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/JobBody' }
+      responses:
+        200: { description: Job updated }
+    delete:
+      tags: [Admin Job]
+      summary: Delete a job
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Job deleted }
+
+  # --- JOB APPLICATIONS ---
+  /api/v1/jobs/{jobId}/apply:
+    post:
+      tags: [Public Job]
+      summary: Submit a job application
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, email, phone, notice, cv]
+              properties:
+                name: { type: string, example: "Alice" }
+                email: { type: string, example: "alice@example.com" }
+                phone: { type: string, example: "123456789" }
+                portfolio: { type: string, example: "https://portfolio.com" }
+                salary: { type: string, example: "5000" }
+                notice: { type: string, example: "1 month" }
+                cover: { type: string, example: "Here is my cover letter..." }
+                cv:
+                  type: string
+                  format: binary
+                  description: "CV File (PDF/DOC/DOCX)"
+      responses:
+        201: { description: Application submitted }
+
+  /api/v1/admin/job-applications:
+    get:
+      tags: [Admin Job Application]
+      summary: List all job applications
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - in: query
+          name: status
+          schema: { type: string, enum: [NEW, REVIEWING, SHORTLISTED, REJECTED] }
+        - in: query
+          name: jobId
+          schema: { type: string }
+      responses:
+        200: { description: Paginated applications }
+
+  /api/v1/admin/job-applications/{id}/status:
+    patch:
+      tags: [Admin Job Application]
+      summary: Update application status
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: { status: "SHORTLISTED" }
+              properties:
+                status: { type: string, enum: [NEW, REVIEWING, SHORTLISTED, REJECTED] }
+      responses:
+        200: { description: Status updated }
+
+  /api/v1/admin/job-applications/{id}:
+    delete:
+      tags: [Admin Job Application]
+      summary: Delete an application (also deletes CV from cloudinary)
+      security: [{ cookieAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        200: { description: Application deleted }

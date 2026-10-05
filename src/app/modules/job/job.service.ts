@@ -1,0 +1,78 @@
+import { Job } from './job.model.js';
+import { IJob } from './job.interface.js';
+import { AppError } from '../../errors/AppError.js';
+import { slugify } from '../../utils/slugify.js';
+
+const createJob = async (payload: Partial<IJob>) => {
+  const slug = slugify(payload.title as string);
+  
+  const existing = await Job.findOne({ slug });
+  const finalSlug = existing ? `${slug}-${Date.now()}` : slug;
+
+  const job = await Job.create({ ...payload, slug: finalSlug });
+  return job;
+};
+
+const getAllJobs = async (query: Record<string, unknown>, isAuth: boolean) => {
+  const { page = 1, limit = 10, search, sort, department } = query;
+  
+  const filter: Record<string, unknown> = {};
+  if (!isAuth) {
+    filter.status = 'PUBLISHED';
+  } else if (query.status) {
+    filter.status = query.status;
+  }
+
+  if (department) {
+    filter.department = department;
+  }
+
+  if (search) {
+    filter.$text = { $search: search as string };
+  }
+
+  const sortOption = sort ? (sort as string) : '-createdAt';
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const jobs = await Job.find(filter)
+    .sort(sortOption)
+    .skip(skip)
+    .limit(Number(limit));
+
+  const total = await Job.countDocuments(filter);
+
+  return { jobs, total };
+};
+
+const getJobById = async (id: string) => {
+  const job = await Job.findById(id);
+  if (!job) throw new AppError(404, 'Job not found', 'JOB_NOT_FOUND');
+  return job;
+};
+
+const getJobBySlug = async (slug: string) => {
+  const job = await Job.findOne({ slug, status: 'PUBLISHED' });
+  if (!job) throw new AppError(404, 'Job not found', 'JOB_NOT_FOUND');
+  return job;
+};
+
+const updateJob = async (id: string, payload: Partial<IJob>) => {
+  const job = await Job.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
+  if (!job) throw new AppError(404, 'Job not found', 'JOB_NOT_FOUND');
+  return job;
+};
+
+const deleteJob = async (id: string) => {
+  const job = await Job.findByIdAndDelete(id);
+  if (!job) throw new AppError(404, 'Job not found', 'JOB_NOT_FOUND');
+  return job;
+};
+
+export const JobService = {
+  createJob,
+  getAllJobs,
+  getJobById,
+  getJobBySlug,
+  updateJob,
+  deleteJob,
+};
