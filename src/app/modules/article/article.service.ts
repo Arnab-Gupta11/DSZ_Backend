@@ -66,9 +66,13 @@ const getAllArticles = async (
     .paginate()
     .fields();
 
+  const countQueryBuilder = new QueryBuilder<IArticle>(Article.find(statusFilter), rawQuery)
+    .search(['title', 'excerpt'])
+    .filterByCategory(['status', 'category']);
+
   const [articles, total] = await Promise.all([
     queryBuilder.modelQuery.lean(),
-    Article.countDocuments(statusFilter),
+    countQueryBuilder.modelQuery.countDocuments(),
   ]);
 
   return { articles: articles as unknown as IArticle[], total };

@@ -14,6 +14,7 @@ const articleBlockSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('h2'), text: z.string().min(1) }),
   z.object({ type: z.literal('quote'), text: z.string().min(1) }),
   z.object({ type: z.literal('list'), items: z.array(z.string().min(1)).min(1) }),
+  z.object({ type: z.literal('html'), text: z.string().min(1) }),
 ]);
 
 const articleBodySchema = z.object({
@@ -22,7 +23,7 @@ const articleBodySchema = z.object({
   excerpt: z.string().min(10).max(500),
   image: z.string().min(1),
   imageAlt: z.string().min(1).max(300),
-  imagePublicId: z.string().min(1),
+  imagePublicId: z.string().optional(),
   author: z.string().min(1).max(100).default('DSZ Team'),
   body: z.array(articleBlockSchema).min(1),
   readTime: z.string().optional(), // auto-calculated if omitted

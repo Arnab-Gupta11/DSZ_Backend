@@ -7,7 +7,7 @@ const articleSchema = new Schema<IArticle>({
   excerpt: { type: String, required: true },
   image: { type: String, required: true },
   imageAlt: { type: String, required: true },
-  imagePublicId: { type: String, required: true },
+  imagePublicId: { type: String },
   author: { type: String, required: true },
   body: [{ type: Schema.Types.Mixed }],
   readTime: { type: String, required: true },

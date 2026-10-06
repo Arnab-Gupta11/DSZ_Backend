@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-export type ArticleBlock = { type: 'p'; text: string } | { type: 'h2'; text: string } | { type: 'quote'; text: string } | { type: 'list'; items: string[] };
+export type ArticleBlock = { type: 'p'; text: string } | { type: 'h2'; text: string } | { type: 'quote'; text: string } | { type: 'list'; items: string[] } | { type: 'html'; text: string };
 export interface IArticle {
   _id: Types.ObjectId;
   slug: string;
@@ -8,7 +8,7 @@ export interface IArticle {
   excerpt: string;
   image: string;
   imageAlt: string;
-  imagePublicId: string;
+  imagePublicId?: string;
   author: string;
   body: ArticleBlock[];
   readTime: string;
