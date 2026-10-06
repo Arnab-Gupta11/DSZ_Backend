@@ -39,9 +39,9 @@ const getAllWorks = async (
 ): Promise<{ works: IWork[]; total: number }> => {
   const statusFilter = isAdmin ? {} : { status: 'PUBLISHED' as const };
 
-  const queryBuilder = new QueryBuilder<IWork>(Work.find(statusFilter), rawQuery)
+  const queryBuilder = new QueryBuilder<IWork>(Work.find(statusFilter).populate('service'), rawQuery)
     .search(['title', 'client'])
-    .filterByCategory(['status', 'categories'])
+    .filterByCategory(['status', 'service'])
     .sort()
     .paginate()
     .fields();
@@ -56,13 +56,13 @@ const getAllWorks = async (
 };
 
 const getWorkBySlug = async (slug: string): Promise<IWork> => {
-  const work = await Work.findOne({ slug, status: 'PUBLISHED' }).lean();
+  const work = await Work.findOne({ slug, status: 'PUBLISHED' }).populate('service').lean();
   if (!work) throw new AppError(404, 'Work not found', 'WORK_NOT_FOUND');
   return work as IWork;
 };
 
 const getWorkById = async (id: string): Promise<IWork> => {
-  const work = await Work.findById(id).lean();
+  const work = await Work.findById(id).populate('service').lean();
   if (!work) throw new AppError(404, 'Work not found', 'WORK_NOT_FOUND');
   return work as IWork;
 };

@@ -115,12 +115,10 @@ const worksData = [
     client: '[CLIENT NAME]',
     industry: 'Perfume & Fragrance',
     services: ['Brand Identity', 'Digital Campaign'],
-    categories: ['Branding', 'Marketing'],
+    
     result: '[+XX% engagement]',
     year: '[YEAR]',
-    image: '/6cf3b6ef-6422-452a-9c33-9099ceccc321.jpg',
-    imageAlt: 'Faceted glass perfume bottle on a slate plinth with cyan rim light',
-    imagePulicId: 'seed/perfume',
+    heroImages: [{ src: '/6cf3b6ef-6422-452a-9c33-9099ceccc321.jpg', alt: 'Faceted glass perfume bottle on a slate plinth with cyan rim light', publicId: 'seed/perfume' }],
     summary: 'Identity and launch campaign for a new fragrance line.',
     challenge:
       '[Describe the client\'s problem] — for example, a new fragrance line entering a crowded market with no recognisable identity and no digital presence.',
@@ -148,12 +146,10 @@ const worksData = [
     client: '[CLIENT NAME]',
     industry: 'Clothing & Fashion',
     services: ['Campaign', 'Video Production'],
-    categories: ['Marketing', 'Video'],
+    
     result: '[+XX% reach]',
     year: '[YEAR]',
-    image: '/43e8c8af-edb8-4e24-9225-aa2c1b70b142.jpg',
-    imageAlt: 'Model in minimalist tailored clothing against a deep teal backdrop',
-    imagePulicId: 'seed/fashion',
+    heroImages: [{ src: '/43e8c8af-edb8-4e24-9225-aa2c1b70b142.jpg', alt: 'Model in minimalist tailored clothing against a deep teal backdrop', publicId: 'seed/fashion' }],
     summary: 'Campaign concept, lookbook film and reels for a new collection.',
     challenge:
       '[Describe the client\'s problem] — for example, a new collection that needed to stand out in a busy season with a limited budget.',
@@ -181,12 +177,10 @@ const worksData = [
     client: '[CLIENT NAME]',
     industry: 'Watches',
     services: ['E-commerce Website', 'UI Design'],
-    categories: ['Web/App', 'Design'],
+    
     result: '[XX% conversion rate]',
     year: '[YEAR]',
-    image: '/b0850761-f8c5-47ab-aa68-4aa79cbd5cb0.jpg',
-    imageAlt: 'Steel wristwatch close-up with a thin cyan light on the bezel',
-    imagePulicId: 'seed/watch',
+    heroImages: [{ src: '/b0850761-f8c5-47ab-aa68-4aa79cbd5cb0.jpg', alt: 'Steel wristwatch close-up with a thin cyan light on the bezel', publicId: 'seed/watch' }],
     summary: 'A fast, mobile-first online store for a watch brand.',
     challenge:
       '[Describe the client\'s problem] — for example, a slow, dated online store that lost customers on mobile.',
@@ -214,12 +208,10 @@ const worksData = [
     client: '[CLIENT NAME]',
     industry: 'Technology & Accessories',
     services: ['Product Design', 'Video'],
-    categories: ['Design', 'Video'],
+    
     result: '[XX product launches]',
     year: '[YEAR]',
-    image: '/eb4a60fe-f24b-4d4f-81a6-bec6edc1078e.jpg',
-    imageAlt: 'Matte wireless earbuds and charging case on a dark teal surface',
-    imagePulicId: 'seed/earbuds-main',
+    heroImages: [{ src: '/eb4a60fe-f24b-4d4f-81a6-bec6edc1078e.jpg', alt: 'Matte wireless earbuds and charging case on a dark teal surface', publicId: 'seed/earbuds-main' }],
     summary: 'A reusable visual system for product launches.',
     challenge:
       '[Describe the client\'s problem] — for example, inconsistent product visuals across marketplaces and social channels.',
@@ -247,12 +239,10 @@ const worksData = [
     client: '[CLIENT NAME]',
     industry: 'Lifestyle & Skincare',
     services: ['Brand Strategy', 'Packaging'],
-    categories: ['Branding', 'Design'],
+    
     result: '[+XX% repeat orders]',
     year: '[YEAR]',
-    image: '/46b43acd-d942-4d2a-b40d-c95fc5df9dce.jpg',
-    imageAlt: 'Skincare bottles arranged on sculptural stone blocks',
-    imagePulicId: 'seed/skincare',
+    heroImages: [{ src: '/46b43acd-d942-4d2a-b40d-c95fc5df9dce.jpg', alt: 'Skincare bottles arranged on sculptural stone blocks', publicId: 'seed/skincare' }],
     summary: 'Positioning, identity and packaging for a growing skincare brand.',
     challenge:
       '[Describe the client\'s problem] — for example, a brand that had grown quickly but looked inconsistent across products.',
@@ -280,12 +270,10 @@ const worksData = [
     client: '[CLIENT NAME]',
     industry: 'Retail',
     services: ['Business Automation', 'Dashboard'],
-    categories: ['Automation', 'Web/App'],
+    
     result: '[XX hrs saved / week]',
     year: '[YEAR]',
-    image: '/e59bcbe1-6a64-44f1-ac68-4d36edadccbe.jpg',
-    imageAlt: 'Laptop showing an automation dashboard with connected workflow nodes',
-    imagePulicId: 'seed/dashboard-main',
+    heroImages: [{ src: '/e59bcbe1-6a64-44f1-ac68-4d36edadccbe.jpg', alt: 'Laptop showing an automation dashboard with connected workflow nodes', publicId: 'seed/dashboard-main' }],
     summary: 'Connected ordering, messaging and reporting in one flow.',
     challenge:
       '[Describe the client\'s problem] — for example, orders arriving through chat and social were tracked by hand in spreadsheets.',
@@ -529,10 +517,11 @@ async function seed() {
     ]);
 
     console.log('✍️  Seeding services…');
-    await Service.insertMany(servicesData);
+    const createdServices = await Service.insertMany(servicesData);
 
     console.log('✍️  Seeding works…');
-    await Work.insertMany(worksData);
+    const mappedWorksData = worksData.map(w => ({ ...w, service: createdServices[Math.floor(Math.random() * createdServices.length)]._id }));
+    await Work.insertMany(mappedWorksData);
 
     console.log('✍️  Seeding articles…');
     await Article.insertMany(articlesData);

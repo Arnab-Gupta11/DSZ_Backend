@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 export interface IProjectResult { value: string; label: string; }
-export interface IProjectImage { src: string; alt: string; publicId: string; }
+export interface IProjectImage { src: string; alt: string; publicId?: string; }
 export interface IWork {
   _id: Types.ObjectId;
   slug: string;
@@ -8,12 +8,10 @@ export interface IWork {
   client: string;
   industry: string;
   services: string[];
-  categories: ('Branding'|'Marketing'|'Design'|'Video'|'Web/App'|'Automation')[];
+  service: Types.ObjectId;
   result: string;
   year: string;
-  image: string;
-  imageAlt: string;
-  imagePulicId: string;
+  heroImages: IProjectImage[];
   summary: string;
   challenge: string;
   strategy: string;

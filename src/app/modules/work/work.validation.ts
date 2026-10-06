@@ -16,7 +16,7 @@ const projectResultSchema = z.object({
 const galleryImageSchema = z.object({
   src: z.string().min(1),
   alt: z.string().min(1),
-  publicId: z.string().min(1),
+  publicId: z.string().optional(),
 });
 
 const workBodySchema = z.object({
@@ -24,14 +24,10 @@ const workBodySchema = z.object({
   client: z.string().min(1).max(200),
   industry: z.string().min(1).max(100),
   services: z.array(z.string().min(1)).min(1),
-  categories: z.array(
-    z.enum(['Branding', 'Marketing', 'Design', 'Video', 'Web/App', 'Automation'])
-  ).min(1),
+  service: z.string().min(1),
   result: z.string().min(1).max(200),
   year: z.string().regex(/^\d{4}$/, 'Year must be a 4-digit number'),
-  image: z.string().min(1),
-  imageAlt: z.string().min(1).max(300),
-  imagePulicId: z.string().min(1),
+  heroImages: z.array(galleryImageSchema).min(1),
   summary: z.string().min(10),
   challenge: z.string().min(10),
   strategy: z.string().min(10),
