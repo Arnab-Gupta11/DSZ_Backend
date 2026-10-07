@@ -532,6 +532,21 @@ async function seed() {
     console.log('✍️  Seeding settings…');
     await Settings.create(settingsData as any);
 
+    console.log('✍️  Seeding super admin…');
+    const argon2 = (await import('argon2')).default;
+    const { Admin } = await import('../app/modules/auth/auth.model.js');
+    const superAdminExists = await Admin.findOne({ role: 'SUPER_ADMIN' });
+    if (!superAdminExists) {
+      await Admin.create({
+        name: 'Super Admin',
+        email: 'superadmin@digitalsoftzone.com',
+        passwordHash: await argon2.hash('superadmin123'),
+        role: 'SUPER_ADMIN',
+        isActive: true,
+      });
+      console.log('✅ Super Admin seeded (superadmin@digitalsoftzone.com / superadmin123)');
+    }
+
     console.log('');
     console.log('✅ Database seeded successfully!');
     console.log(`   Services:     ${servicesData.length}`);

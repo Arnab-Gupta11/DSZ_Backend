@@ -8,5 +8,7 @@ const publicRouter = Router();
 publicRouter.post('/', contactLimiter, validateRequest(ContactValidation.createSchema), ContactController.createContact);
 const adminRouter = Router();
 adminRouter.get('/', auth(), ContactController.getAdminContacts);
+adminRouter.get("/:id", auth(), ContactController.getContactById);
 adminRouter.patch('/:id', auth(), ContactController.updateContactStatus);
+adminRouter.delete("/:id", auth(), ContactController.deleteContact);
 export const ContactRoutes = { publicRouter, adminRouter };

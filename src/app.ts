@@ -1,4 +1,5 @@
-import express, { Application, Request, Response } from 'express';
+import express from 'express';
+import type { Application, Request, Response } from 'express-serve-static-core';
 import cors from 'cors';
 import helmet from 'helmet';
 import mongoose from 'mongoose';

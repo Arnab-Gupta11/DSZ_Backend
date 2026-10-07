@@ -4,7 +4,7 @@ export interface IAdmin {
   name: string;
   email: string;
   passwordHash: string;
-  role: 'ADMIN';
+  role: 'ADMIN' | 'SUPER_ADMIN';
   isActive: boolean;
   lastLoginAt?: Date;
   createdAt: Date;

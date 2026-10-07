@@ -9,6 +9,7 @@ import { SettingsRoutes } from '../modules/settings/settings.routes.js';
 import { MediaRoutes } from '../modules/media/media.routes.js';
 import { JobRoutes } from '../modules/job/job.routes.js';
 import { JobApplicationRoutes } from '../modules/jobApplication/jobApplication.routes.js';
+import { AdminManagementRoutes } from '../modules/adminManagement/adminManagement.routes.js';
 
 const router = Router();
 
@@ -31,6 +32,7 @@ const moduleRoutes = [
   { path: '/admin/jobs', route: JobRoutes.adminRouter },
   { path: '/jobs', route: JobApplicationRoutes.publicRouter },
   { path: '/admin/job-applications', route: JobApplicationRoutes.adminRouter },
+  { path: '/admin/admins', route: AdminManagementRoutes },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
