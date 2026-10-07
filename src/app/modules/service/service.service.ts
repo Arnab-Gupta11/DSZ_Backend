@@ -21,7 +21,7 @@ const getAllServices = async (rawQuery: Record<string, unknown>, isAdmin: boolea
   const statusFilter = isAdmin ? {} : { status: 'PUBLISHED' as const };
   
   const queryBuilder = new QueryBuilder(Service.find(statusFilter), rawQuery)
-    .search(['title', 'tag'])
+    .search(['title', 'tag', 'short'])
     .filterByCategory(['status'])
     .sort()
     .paginate()
@@ -30,7 +30,7 @@ const getAllServices = async (rawQuery: Record<string, unknown>, isAdmin: boolea
   const services = await queryBuilder.modelQuery;
   
   const countQueryBuilder = new QueryBuilder(Service.find(statusFilter), rawQuery)
-    .search(['title', 'tag'])
+    .search(['title', 'tag', 'short'])
     .filterByCategory(['status']);
     
   const total = await countQueryBuilder.modelQuery.countDocuments();

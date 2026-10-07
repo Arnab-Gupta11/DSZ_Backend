@@ -23,7 +23,7 @@ const jobSchema = new Schema<IJob>(
     city: { type: String, required: true },
     experience: { type: String, required: true },
     salary: { type: String },
-    postedAt: { type: Date, required: true },
+    postedAt: { type: Date },
     deadline: { type: Date, required: true },
     short: { type: String, required: true },
     overview: { type: String, required: true },

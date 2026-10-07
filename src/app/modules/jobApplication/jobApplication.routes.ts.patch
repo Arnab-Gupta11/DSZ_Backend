@@ -1,0 +1,10 @@
+--- ../dsz-backend/src/app/modules/jobApplication/jobApplication.routes.ts
++++ ../dsz-backend/src/app/modules/jobApplication/jobApplication.routes.ts
+@@ -14,6 +14,7 @@
+ 
+ const adminRouter: Router = Router();
+ adminRouter.get('/', auth(), catchAsync(JobApplicationController.getAdminApplications));
++adminRouter.get('/:id', auth(), catchAsync(JobApplicationController.getApplicationById));
+ adminRouter.patch('/:id/status', auth(), catchAsync(JobApplicationController.updateStatus));
+ adminRouter.delete('/:id', auth(), catchAsync(JobApplicationController.deleteApplication));
+ 

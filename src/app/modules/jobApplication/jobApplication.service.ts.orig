@@ -32,18 +32,11 @@ const applyForJob = async (jobId: string, payload: Partial<IJobApplication>, fil
 };
 
 const getAdminApplications = async (query: Record<string, unknown>) => {
-  const { page = 1, limit = 10, status, jobId, search } = query;
+  const { page = 1, limit = 10, status, jobId } = query;
   
   const filter: Record<string, unknown> = {};
   if (status) filter.status = status;
   if (jobId) filter.jobId = jobId;
-  if (search) {
-    filter.$or = [
-      { name: { $regex: search, $options: 'i' } },
-      { email: { $regex: search, $options: 'i' } },
-      { phone: { $regex: search, $options: 'i' } },
-    ];
-  }
 
   const skip = (Number(page) - 1) * Number(limit);
 
@@ -56,12 +49,6 @@ const getAdminApplications = async (query: Record<string, unknown>) => {
   const total = await JobApplication.countDocuments(filter);
 
   return { applications, total };
-};
-
-const getApplicationById = async (id: string) => {
-  const application = await JobApplication.findById(id).populate('jobId', 'title slug');
-  if (!application) throw new AppError(404, 'Application not found', 'APPLICATION_NOT_FOUND');
-  return application;
 };
 
 const updateApplicationStatus = async (id: string, status: string) => {
@@ -84,7 +71,6 @@ const deleteApplication = async (id: string) => {
 export const JobApplicationService = {
   applyForJob,
   getAdminApplications,
-  getApplicationById,
   updateApplicationStatus,
   deleteApplication,
 };

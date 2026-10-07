@@ -1,0 +1,22 @@
+--- ../dsz-backend/src/app/modules/jobApplication/jobApplication.controller.ts
++++ ../dsz-backend/src/app/modules/jobApplication/jobApplication.controller.ts
+@@ -23,6 +23,11 @@
+   });
+ };
+ 
++const getApplicationById = async (req: Request, res: Response) => {
++  const result = await JobApplicationService.getApplicationById(req.params.id);
++  sendResponse(res, { statusCode: 200, success: true, message: 'Application fetched successfully', data: result });
++};
++
+ const updateStatus = async (req: Request, res: Response) => {
+   const result = await JobApplicationService.updateApplicationStatus(req.params.id, req.body.status);
+   sendResponse(res, { statusCode: 200, success: true, message: 'Status updated successfully', data: result });
+@@ -36,6 +41,7 @@
+ export const JobApplicationController = {
+   applyForJob,
+   getAdminApplications,
++  getApplicationById,
+   updateStatus,
+   deleteApplication,
+ };

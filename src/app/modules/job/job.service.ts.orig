@@ -32,11 +32,7 @@ const getAllJobs = async (query: Record<string, unknown>, isAuth: boolean) => {
   }
 
   if (search) {
-    filter.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { department: { $regex: search, $options: 'i' } },
-      { type: { $regex: search, $options: 'i' } },
-    ];
+    filter.$text = { $search: search as string };
   }
 
   const sortOption = sort ? (sort as string) : '-createdAt';

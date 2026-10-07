@@ -872,6 +872,12 @@ paths:
     post:
       tags: [Public Job]
       summary: Submit a job application
+      parameters:
+        - in: path
+          name: jobId
+          required: true
+          schema: { type: string }
+          description: ID of the job being applied for
       requestBody:
         required: true
         content:

@@ -124,12 +124,14 @@ const updateArticle = async (id: string, payload: UpdateArticlePayload): Promise
     payload.readTime = calculateReadTime(payload.body);
   }
 
-  if (payload.status === 'PUBLISHED') {
+  const existingArticle = await Article.findById(id).lean();
+  if (!existingArticle) throw new AppError(404, 'Article not found', 'ARTICLE_NOT_FOUND');
+
+  if (payload.status === 'PUBLISHED' && existingArticle.status !== 'PUBLISHED' && !existingArticle.publishedAt) {
     (payload as Record<string, unknown>).publishedAt = new Date();
   }
 
   const article = await Article.findByIdAndUpdate(id, payload, { new: true, runValidators: true }).lean();
-  if (!article) throw new AppError(404, 'Article not found', 'ARTICLE_NOT_FOUND');
   return article as IArticle;
 };
 

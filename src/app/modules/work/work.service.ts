@@ -40,7 +40,7 @@ const getAllWorks = async (
   const statusFilter = isAdmin ? {} : { status: 'PUBLISHED' as const };
 
   const queryBuilder = new QueryBuilder<IWork>(Work.find(statusFilter).populate('service'), rawQuery)
-    .search(['title', 'client'])
+    .search(['title', 'client', 'industry'])
     .filterByCategory(['status', 'service'])
     .sort()
     .paginate()
@@ -73,13 +73,15 @@ const updateWork = async (id: string, payload: UpdateWorkPayload): Promise<IWork
     payload.slug = await generateUniqueSlug(payload.title, id);
   }
 
-  // Auto-set publishedAt when status becomes PUBLISHED
-  if (payload.status === 'PUBLISHED') {
+  const existingWork = await Work.findById(id).lean();
+  if (!existingWork) throw new AppError(404, 'Work not found', 'WORK_NOT_FOUND');
+
+  // Auto-set publishedAt when status becomes PUBLISHED for the first time
+  if (payload.status === 'PUBLISHED' && existingWork.status !== 'PUBLISHED' && !existingWork.publishedAt) {
     (payload as Record<string, unknown>).publishedAt = new Date();
   }
 
   const work = await Work.findByIdAndUpdate(id, payload, { new: true, runValidators: true }).lean();
-  if (!work) throw new AppError(404, 'Work not found', 'WORK_NOT_FOUND');
   return work as IWork;
 };
 

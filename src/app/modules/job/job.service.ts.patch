@@ -1,0 +1,15 @@
+--- ../dsz-backend/src/app/modules/job/job.service.ts
++++ ../dsz-backend/src/app/modules/job/job.service.ts
+@@ -21,7 +21,11 @@
+   }
+ 
+   if (search) {
+-    filter.$text = { $search: search as string };
++    filter.$or = [
++      { title: { $regex: search, $options: 'i' } },
++      { department: { $regex: search, $options: 'i' } },
++      { type: { $regex: search, $options: 'i' } },
++    ];
+   }
+ 
+   const sortOption = sort ? (sort as string) : '-createdAt';

@@ -14,6 +14,7 @@ publicRouter.post('/:jobId/apply', upload.single('cv'), catchAsync(JobApplicatio
 
 const adminRouter: Router = Router();
 adminRouter.get('/', auth(), catchAsync(JobApplicationController.getAdminApplications));
+adminRouter.get('/:id', auth(), catchAsync(JobApplicationController.getApplicationById));
 adminRouter.patch('/:id/status', auth(), catchAsync(JobApplicationController.updateStatus));
 adminRouter.delete('/:id', auth(), catchAsync(JobApplicationController.deleteApplication));
 
