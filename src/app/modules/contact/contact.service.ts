@@ -11,7 +11,7 @@ export const ContactService = {
   },
   getAllContacts: async (query: Record<string, unknown>) => {
     const contactQuery = new QueryBuilder(Contact.find(), query)
-      .search(['name', 'contact', 'need', 'message'])
+      .search(['name', 'email', 'phone', 'need', 'message'])
       .filterByCategory(['status'])
       .sort()
       .paginate()
@@ -20,7 +20,7 @@ export const ContactService = {
     const result = await contactQuery.modelQuery;
     
     const countQuery = new QueryBuilder(Contact.find(), query)
-      .search(['name', 'contact', 'need', 'message'])
+      .search(['name', 'email', 'phone', 'need', 'message'])
       .filterByCategory(['status']);
     const total = await countQuery.modelQuery.countDocuments();
 
