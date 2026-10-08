@@ -312,9 +312,9 @@ paths:
         - $ref: '#/components/parameters/searchParam'
         - $ref: '#/components/parameters/sortParam'
         - in: query
-          name: category
+          name: service
           schema: { type: string }
-          description: "Filter by Service Category"
+          description: "Filter by Service Category ID"
       responses:
         200:
           description: Paginated works
@@ -341,6 +341,10 @@ paths:
         - $ref: '#/components/parameters/searchParam'
         - $ref: '#/components/parameters/sortParam'
         - $ref: '#/components/parameters/statusParam'
+        - in: query
+          name: service
+          schema: { type: string }
+          description: "Filter by Service Category ID"
       responses:
         200: { description: Paginated works }
     post:

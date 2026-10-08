@@ -10,6 +10,7 @@ const createService = catchAsync(async (req, res) => {
 });
 
 const getPublicServices = catchAsync(async (req, res) => {
+  req.query.limit = req.query.limit || '100';
   const { services, total } = await ServiceService.getAllServices(req.query as Record<string, unknown>, false);
   const { page, limit } = calculatePagination(req.query);
   const totalPages = Math.ceil(total / limit);

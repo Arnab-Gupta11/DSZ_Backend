@@ -11,7 +11,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.string().default('7d'),
   COOKIE_SECRET: z.string().min(32),
-  CLIENT_URL: z.string().url(),
+  CLIENT_URL: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_API_KEY: z.string(),
   CLOUDINARY_API_SECRET: z.string(),

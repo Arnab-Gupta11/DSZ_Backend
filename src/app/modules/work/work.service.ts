@@ -39,6 +39,14 @@ const getAllWorks = async (
 ): Promise<{ works: IWork[]; total: number }> => {
   const statusFilter = isAdmin ? {} : { status: 'PUBLISHED' as const };
 
+  // Map alias query params to 'service'
+  if (rawQuery.serviceId && !rawQuery.service) {
+    rawQuery.service = rawQuery.serviceId;
+  }
+  if (rawQuery.category && !rawQuery.service) {
+    rawQuery.service = rawQuery.category;
+  }
+
   const queryBuilder = new QueryBuilder<IWork>(Work.find(statusFilter).populate('service'), rawQuery)
     .search(['title', 'client', 'industry'])
     .filterByCategory(['status', 'service'])
@@ -49,7 +57,7 @@ const getAllWorks = async (
   // Run both queries in parallel for efficiency
   const [works, total] = await Promise.all([
     queryBuilder.modelQuery.lean(),
-    Work.countDocuments(statusFilter),
+    Work.countDocuments(queryBuilder.modelQuery.getFilter()),
   ]);
 
   return { works: works as unknown as IWork[], total };

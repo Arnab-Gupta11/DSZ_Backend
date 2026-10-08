@@ -16,9 +16,12 @@ const applyForJob = async (jobId: string, payload: Partial<IJobApplication>, fil
   const b64 = Buffer.from(file.buffer).toString('base64');
   const dataURI = `data:${file.mimetype};base64,${b64}`;
   
+  const safeOriginalName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+  
   const uploadResult = await cloudinary.uploader.upload(dataURI, {
     folder: 'dsz/cvs',
     resource_type: 'raw',
+    public_id: `${Date.now()}-${safeOriginalName}`,
   });
 
   const application = await JobApplication.create({
