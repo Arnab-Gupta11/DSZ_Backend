@@ -3,7 +3,7 @@ import { IArticle } from './article.interface.js';
 const articleSchema = new Schema<IArticle>({
   slug: { type: String, required: true, unique: true },
   title: { type: String, required: true },
-  category: { type: String, enum: ['Marketing Tips', 'AI Tools', 'Case Studies', 'DSZ News'], required: true },
+  category: { type: Schema.Types.ObjectId, ref: 'Service', required: true },
   excerpt: { type: String, required: true },
   image: { type: String, required: true },
   imageAlt: { type: String, required: true },

@@ -59,7 +59,7 @@ const getAllArticles = async (
 ): Promise<{ articles: IArticle[]; total: number }> => {
   const statusFilter = isAdmin ? {} : { status: 'PUBLISHED' as const };
 
-  const queryBuilder = new QueryBuilder<IArticle>(Article.find(statusFilter), rawQuery)
+  const queryBuilder = new QueryBuilder<IArticle>(Article.find(statusFilter).populate('category', 'title slug'), rawQuery)
     .search(['title', 'excerpt'])
     .filterByCategory(['status', 'category'])
     .sort()
@@ -79,7 +79,7 @@ const getAllArticles = async (
 };
 
 const getArticleBySlug = async (slug: string): Promise<{ article: IArticle; related: IArticle[] }> => {
-  const article = await Article.findOne({ slug, status: 'PUBLISHED' }).lean();
+  const article = await Article.findOne({ slug, status: 'PUBLISHED' }).populate('category', 'title slug').lean();
   if (!article) throw new AppError(404, 'Article not found', 'ARTICLE_NOT_FOUND');
 
   // Same-category articles first, up to 3 total — excluding current
@@ -88,8 +88,9 @@ const getArticleBySlug = async (slug: string): Promise<{ article: IArticle; rela
     category: article.category,
     _id: { $ne: article._id },
   })
+    .populate('category', 'title slug')
     .limit(3)
-    .select('slug title category excerpt date image imageAlt readTime author order')
+    .select('slug title category excerpt createdAt publishedAt image imageAlt readTime author order')
     .lean();
 
   let related: IArticle[] = sameCat as IArticle[];
@@ -100,8 +101,9 @@ const getArticleBySlug = async (slug: string): Promise<{ article: IArticle; rela
       category: { $ne: article.category },
       _id: { $ne: article._id },
     })
+      .populate('category', 'title slug')
       .limit(3 - related.length)
-      .select('slug title category excerpt date image imageAlt readTime author order')
+      .select('slug title category excerpt createdAt publishedAt image imageAlt readTime author order')
       .lean();
     related = [...related, ...(others as IArticle[])];
   }
@@ -110,7 +112,7 @@ const getArticleBySlug = async (slug: string): Promise<{ article: IArticle; rela
 };
 
 const getArticleById = async (id: string): Promise<IArticle> => {
-  const article = await Article.findById(id).lean();
+  const article = await Article.findById(id).populate('category', 'title slug').lean();
   if (!article) throw new AppError(404, 'Article not found', 'ARTICLE_NOT_FOUND');
   return article as IArticle;
 };

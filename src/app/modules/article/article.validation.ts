@@ -19,7 +19,7 @@ const articleBlockSchema = z.discriminatedUnion('type', [
 
 const articleBodySchema = z.object({
   title: z.string().min(1).max(300),
-  category: z.enum(['Marketing Tips', 'AI Tools', 'Case Studies', 'DSZ News']),
+  category: z.string().min(1),
   excerpt: z.string().min(10).max(500),
   image: z.string().min(1),
   imageAlt: z.string().min(1).max(300),

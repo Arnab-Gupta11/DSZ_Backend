@@ -4,7 +4,7 @@ export interface IArticle {
   _id: Types.ObjectId;
   slug: string;
   title: string;
-  category: 'Marketing Tips' | 'AI Tools' | 'Case Studies' | 'DSZ News';
+  category: Types.ObjectId;
   excerpt: string;
   image: string;
   imageAlt: string;
