@@ -11,6 +11,7 @@ const articleSchema = new Schema<IArticle>({
   author: { type: String, required: true },
   body: [{ type: Schema.Types.Mixed }],
   readTime: { type: String, required: true },
+  isFeatured: { type: Boolean, default: false },
   status: { type: String, enum: ['DRAFT', 'PUBLISHED', 'ARCHIVED'], default: 'DRAFT' },
   order: { type: Number, default: Date.now },
   seo: { metaTitle: String, metaDescription: String, ogImage: String, canonicalUrl: String, noIndex: { type: Boolean, default: false } },

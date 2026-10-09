@@ -61,14 +61,14 @@ const getAllArticles = async (
 
   const queryBuilder = new QueryBuilder<IArticle>(Article.find(statusFilter).populate('category', 'title slug'), rawQuery)
     .search(['title', 'excerpt'])
-    .filterByCategory(['status', 'category'])
+    .filterByCategory(['status', 'category', 'isFeatured'])
     .sort()
     .paginate()
     .fields();
 
   const countQueryBuilder = new QueryBuilder<IArticle>(Article.find(statusFilter), rawQuery)
     .search(['title', 'excerpt'])
-    .filterByCategory(['status', 'category']);
+    .filterByCategory(['status', 'category', 'isFeatured']);
 
   const [articles, total] = await Promise.all([
     queryBuilder.modelQuery.lean(),

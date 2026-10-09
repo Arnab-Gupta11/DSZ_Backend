@@ -20,6 +20,7 @@ export interface IWork {
   results: IProjectResult[];
   gallery: IProjectImage[];
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  isFeatured?: boolean;
   order: number;
   seo: { metaTitle?: string; metaDescription?: string; ogImage?: string; canonicalUrl?: string; noIndex: boolean; };
   publishedAt?: Date;

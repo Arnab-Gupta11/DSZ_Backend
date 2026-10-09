@@ -18,6 +18,7 @@ const serviceBodySchema = z.object({
   image: z.string().url('Must be a valid URL'),
   imageAlt: z.string().optional(),
   imagePublicId: z.string().optional(),
+  isFeatured: z.boolean().optional().default(false),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional().default('DRAFT'),
   order: z.number().int().min(1).optional(),
   seo: seoSchema,

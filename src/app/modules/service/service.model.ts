@@ -13,6 +13,7 @@ const serviceSchema = new Schema<IService>({
   image: { type: String, required: true },
   imageAlt: { type: String },
   imagePublicId: { type: String },
+  isFeatured: { type: Boolean, default: false },
   status: { type: String, enum: ['DRAFT', 'PUBLISHED', 'ARCHIVED'], default: 'DRAFT' },
   order: { type: Number, default: Date.now },
   seo: { metaTitle: String, metaDescription: String, noIndex: { type: Boolean, default: false } }

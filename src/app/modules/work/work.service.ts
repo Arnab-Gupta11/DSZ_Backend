@@ -49,7 +49,7 @@ const getAllWorks = async (
 
   const queryBuilder = new QueryBuilder<IWork>(Work.find(statusFilter).populate('service'), rawQuery)
     .search(['title', 'client', 'industry'])
-    .filterByCategory(['status', 'service'])
+    .filterByCategory(['status', 'service', 'isFeatured'])
     .sort()
     .paginate()
     .fields();

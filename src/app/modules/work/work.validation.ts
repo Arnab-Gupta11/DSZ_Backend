@@ -35,6 +35,7 @@ const workBodySchema = z.object({
   executionPoints: z.array(z.string().min(1)).min(1),
   results: z.array(projectResultSchema).min(1),
   gallery: z.array(galleryImageSchema).max(10),
+  isFeatured: z.boolean().optional().default(false),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional().default('DRAFT'),
   order: z.number().int().optional(),
   seo: seoSchema,

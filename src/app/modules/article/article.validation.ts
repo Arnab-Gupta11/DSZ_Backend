@@ -27,6 +27,7 @@ const articleBodySchema = z.object({
   author: z.string().min(1).max(100).default('DSZ Team'),
   body: z.array(articleBlockSchema).min(1),
   readTime: z.string().optional(), // auto-calculated if omitted
+  isFeatured: z.boolean().optional().default(false),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional().default('DRAFT'),
   order: z.number().int().optional(),
   seo: seoSchema,
