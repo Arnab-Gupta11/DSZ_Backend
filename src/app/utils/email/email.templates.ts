@@ -106,3 +106,27 @@ export const adminCredentialsTemplate = (data: { name: string; email: string; pa
   `;
   return baseEmailTemplate('Your DSZ Admin Account Details', content);
 };
+
+export const resetPasswordOTPTemplate = (data: { name: string; otp: string }) => {
+  const content = `
+    <h2 style="color: #041C26; margin-top: 0; font-size: 22px;">Hello ${data.name},</h2>
+    <p>We received a request to reset your password for your <strong>Digital Soft Zone</strong> admin account.</p>
+    
+    <div style="background-color: #EEF5F3; border-radius: 6px; padding: 30px; margin: 35px 0; border: 1px solid #E1ECE9; text-align: center;">
+      <p style="margin-bottom: 15px; color: #041C26; font-size: 16px;">Your password reset verification code is:</p>
+      
+      <div style="background-color: #FFFFFF; padding: 15px 30px; border-radius: 4px; font-family: monospace; font-size: 28px; letter-spacing: 8px; font-weight: bold; color: #041C26; display: inline-block; border: 2px dashed #02E0DF;">
+        ${data.otp}
+      </div>
+      
+      <p style="margin-top: 20px; font-size: 14px; color: #3D5359;">This code will expire in <strong>10 minutes</strong>.</p>
+    </div>
+    
+    <p style="background-color: rgba(255, 77, 77, 0.05); border-left: 3px solid #ff4d4d; padding: 15px 20px; font-size: 14px; margin-top: 25px; color: #b30000; border-radius: 0 4px 4px 0;">
+      If you did not request a password reset, please ignore this email or contact support if you have concerns.
+    </p>
+    
+    <p style="margin-top: 35px; color: #041C26;">Best regards,<br><strong>DSZ Security System</strong></p>
+  `;
+  return baseEmailTemplate('Password Reset Verification Code', content);
+};

@@ -1,5 +1,5 @@
 import { transporter } from './email.config.js';
-import { contactEmailTemplate, adminCredentialsTemplate } from './email.templates.js';
+import { contactEmailTemplate, adminCredentialsTemplate, resetPasswordOTPTemplate } from './email.templates.js';
 import { config } from '../../config/env.js';
 
 export const sendContactEmail = async (data: { name: string; contact: string; need: string; message: string }) => {
@@ -24,7 +24,20 @@ export const sendAdminCredentialsEmail = async (data: { name: string; email: str
       subject: 'Your Admin Credentials for DSZ',
       html: adminCredentialsTemplate({ ...data, loginUrl }),
     });
-  } catch (error) {
+    } catch (error) {
     console.error('Error sending admin credentials email:', error);
+  }
+};
+
+export const sendPasswordResetOTP = async (data: { name: string; email: string; otp: string }) => {
+  try {
+    await transporter.sendMail({
+      from: config.SMTP_FROM,
+      to: data.email,
+      subject: 'Password Reset Verification Code - DSZ',
+      html: resetPasswordOTPTemplate(data),
+    });
+  } catch (error) {
+    console.error('Error sending password reset OTP email:', error);
   }
 };

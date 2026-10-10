@@ -7,6 +7,8 @@ export interface IAdmin {
   role: 'ADMIN' | 'SUPER_ADMIN';
   isActive: boolean;
   lastLoginAt?: Date;
+  resetPasswordOTP?: string;
+  resetPasswordExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
 }

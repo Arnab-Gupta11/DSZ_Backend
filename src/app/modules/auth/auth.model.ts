@@ -6,6 +6,8 @@ const adminSchema = new Schema<IAdmin>({
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ['ADMIN', 'SUPER_ADMIN'], default: 'ADMIN' },
   isActive: { type: Boolean, default: true },
-  lastLoginAt: { type: Date }
+  lastLoginAt: { type: Date },
+  resetPasswordOTP: { type: String },
+  resetPasswordExpires: { type: Date }
 }, { timestamps: true });
 export const Admin = model<IAdmin>('Admin', adminSchema);
