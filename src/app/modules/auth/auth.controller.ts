@@ -5,8 +5,8 @@ import { AuthService } from './auth.service.js';
 import { config } from '../../config/env.js';
 
 const login = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.login(req.body);
-  res.cookie('token', result.token, {
+  const result = await AuthService.login((req as any).body);
+  (res as any).cookie('token', result.token, {
     secure: config.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'strict',
@@ -16,7 +16,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-  res.clearCookie('token');
+  (res as any).clearCookie('token');
   sendResponse(res, { statusCode: 200, success: true, message: 'Logged out successfully' });
 });
 
@@ -26,22 +26,22 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.updateProfile((req as any).user._id.toString(), req.body);
+  const result = await AuthService.updateProfile((req as any).user._id.toString(), (req as any).body);
   sendResponse(res, { statusCode: 200, success: true, message: 'Profile updated successfully', data: result });
 });
 
 const changePassword = catchAsync(async (req: Request, res: Response) => {
-  await AuthService.changePassword((req as any).user._id.toString(), req.body);
+  await AuthService.changePassword((req as any).user._id.toString(), (req as any).body);
   sendResponse(res, { statusCode: 200, success: true, message: 'Password changed successfully' });
 });
 
 const forgetPassword = catchAsync(async (req: Request, res: Response) => {
-  await AuthService.forgetPassword(req.body.email);
+  await AuthService.forgetPassword((req as any).body.email);
   sendResponse(res, { statusCode: 200, success: true, message: 'Password reset OTP sent to your email' });
 });
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  await AuthService.resetPassword(req.body);
+  await AuthService.resetPassword((req as any).body);
   sendResponse(res, { statusCode: 200, success: true, message: 'Password reset successfully' });
 });
 
