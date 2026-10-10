@@ -9,14 +9,18 @@ const login = catchAsync(async (req: Request, res: Response) => {
   (res as any).cookie('token', result.token, {
     secure: config.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: config.NODE_ENV === 'production' ? 'none' : 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   sendResponse(res, { statusCode: 200, success: true, message: 'Logged in successfully', data: result.admin });
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-  (res as any).clearCookie('token');
+  (res as any).clearCookie('token', {
+    secure: config.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: config.NODE_ENV === 'production' ? 'none' : 'strict',
+  });
   sendResponse(res, { statusCode: 200, success: true, message: 'Logged out successfully' });
 });
 
