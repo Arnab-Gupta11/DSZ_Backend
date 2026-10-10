@@ -15,6 +15,7 @@ import swaggerUi from 'swagger-ui-express';
 const app: Application = express();
 
 // ── Security middleware ──────────────────────────────────────────────────────
+// @ts-ignore - Vercel TS builder complains about this being uncallable in NodeNext
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(cookieParser());
