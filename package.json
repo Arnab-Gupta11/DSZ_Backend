@@ -1,5 +1,6 @@
 {
   "name": "dsz-backend",
+  "type": "module",
   "version": "1.0.0",
   "description": "DSZ Backend",
   "main": "dist/server.js",
