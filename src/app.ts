@@ -74,9 +74,18 @@ const swaggerSpec = swaggerJsdoc({
       },
     },
   },
-  apis: ['./src/docs/swagger.yaml'],
+  apis: ['./src/docs/swagger.yaml', './api/docs/swagger.yaml'], // Fallbacks for Vercel
 });
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+const swaggerUiOptions = {
+  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.min.js'
+  ]
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
 // ── 404 + global error handler ───────────────────────────────────────────────
 app.use(notFound);
