@@ -18,7 +18,7 @@ const createJob = async (payload: Partial<IJob>) => {
 };
 
 const getAllJobs = async (query: Record<string, unknown>, isAuth: boolean) => {
-  const { page = 1, limit = 10, search, sort, department } = query;
+  const { page = 1, limit = 10, search, sort } = query;
   
   const filter: Record<string, unknown> = {};
   if (!isAuth) {
@@ -27,14 +27,9 @@ const getAllJobs = async (query: Record<string, unknown>, isAuth: boolean) => {
     filter.status = query.status;
   }
 
-  if (department) {
-    filter.department = department;
-  }
-
   if (search) {
     filter.$or = [
       { title: { $regex: search, $options: 'i' } },
-      { department: { $regex: search, $options: 'i' } },
       { type: { $regex: search, $options: 'i' } },
     ];
   }

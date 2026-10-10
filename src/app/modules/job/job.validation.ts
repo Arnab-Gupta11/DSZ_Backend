@@ -3,7 +3,7 @@ import { z } from 'zod';
 const createSchema = z.object({
   body: z.object({
     title: z.string().min(1, 'Title is required'),
-    department: z.enum(['Development', 'Design', 'Marketing', 'Video', 'Operations']),
+    openings: z.number().min(1, 'At least 1 opening is required'),
     type: z.enum(['Full-time', 'Part-time', 'Internship', 'Contract']),
     location: z.enum(['On-site', 'Remote', 'Hybrid']),
     city: z.string().min(1, 'City is required'),
@@ -32,7 +32,7 @@ const createSchema = z.object({
 const updateSchema = z.object({
   body: z.object({
     title: z.string().optional(),
-    department: z.enum(['Development', 'Design', 'Marketing', 'Video', 'Operations']).optional(),
+    openings: z.number().min(1).optional(),
     type: z.enum(['Full-time', 'Part-time', 'Internship', 'Contract']).optional(),
     location: z.enum(['On-site', 'Remote', 'Hybrid']).optional(),
     city: z.string().optional(),

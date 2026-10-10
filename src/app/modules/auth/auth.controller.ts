@@ -25,4 +25,14 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, { statusCode: 200, success: true, message: 'Admin fetched successfully', data: result });
 });
 
-export const AuthController = { login, logout, getMe };
+const updateProfile = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthService.updateProfile((req as any).user._id.toString(), req.body);
+  sendResponse(res, { statusCode: 200, success: true, message: 'Profile updated successfully', data: result });
+});
+
+const changePassword = catchAsync(async (req: Request, res: Response) => {
+  await AuthService.changePassword((req as any).user._id.toString(), req.body);
+  sendResponse(res, { statusCode: 200, success: true, message: 'Password changed successfully' });
+});
+
+export const AuthController = { login, logout, getMe, updateProfile, changePassword };

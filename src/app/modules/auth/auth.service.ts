@@ -23,4 +23,23 @@ const getMe = async (id: string) => {
   return admin;
 };
 
-export const AuthService = { login, getMe };
+const updateProfile = async (id: string, payload: { name: string }) => {
+  const admin = await Admin.findByIdAndUpdate(id, { name: payload.name }, { new: true, runValidators: true }).select('-passwordHash');
+  if (!admin) throw new AppError(404, 'Admin not found', 'AUTH_UNAUTHORIZED');
+  return admin;
+};
+
+const changePassword = async (id: string, payload: any) => {
+  const admin = await Admin.findById(id);
+  if (!admin) throw new AppError(404, 'Admin not found', 'AUTH_UNAUTHORIZED');
+
+  const isMatch = await argon2.verify(admin.passwordHash, payload.oldPassword);
+  if (!isMatch) throw new AppError(400, 'Incorrect old password', 'AUTH_INVALID_PASSWORD');
+
+  const newHash = await argon2.hash(payload.newPassword);
+  admin.passwordHash = newHash;
+  await admin.save();
+  return null;
+};
+
+export const AuthService = { login, getMe, updateProfile, changePassword };

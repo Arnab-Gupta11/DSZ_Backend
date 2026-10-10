@@ -5,10 +5,10 @@ const jobSchema = new Schema<IJob>(
   {
     slug: { type: String, required: true, unique: true },
     title: { type: String, required: true },
-    department: {
-      type: String,
-      enum: ['Development', 'Design', 'Marketing', 'Video', 'Operations'],
+    openings: {
+      type: Number,
       required: true,
+      min: 1,
     },
     type: {
       type: String,
