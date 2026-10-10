@@ -1,7 +1,23 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 
-export const catchAsync = (fn: (req: Request, res: Response, next: NextFunction) => Promise<any> | void) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch((err) => next(err));
+export const catchAsync = <
+  P = any,
+  ResBody = any,
+  ReqBody = any,
+  ReqQuery = any,
+  Locals extends Record<string, any> = Record<string, any>
+>(
+  fn: (
+    req: Request<P, ResBody, ReqBody, ReqQuery, Locals>,
+    res: Response<ResBody, Locals>,
+    next: NextFunction
+  ) => Promise<any> | any
+): RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals> => {
+  return (
+    req: Request<P, ResBody, ReqBody, ReqQuery, Locals>,
+    res: Response<ResBody, Locals>,
+    next: NextFunction
+  ) => {
+    Promise.resolve(fn(req, res, next)).catch((err) => (next as any)(err));
   };
 };

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { JobApplicationService } from './jobApplication.service.js';
 import { sendResponse } from '../../utils/sendResponse.js';
 import { calculatePagination } from '../../utils/pagination.js';

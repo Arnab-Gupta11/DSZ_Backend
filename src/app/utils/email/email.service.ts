@@ -2,7 +2,7 @@ import { transporter } from './email.config.js';
 import { contactEmailTemplate, adminCredentialsTemplate, resetPasswordOTPTemplate } from './email.templates.js';
 import { config } from '../../config/env.js';
 
-export const sendContactEmail = async (data: { name: string; contact: string; need: string; message: string }) => {
+export const sendContactEmail = async (data: { name: string; email: string; phone: string; need: string; message: string }) => {
   try {
     await transporter.sendMail({
       from: config.SMTP_FROM,

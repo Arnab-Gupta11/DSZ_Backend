@@ -1,5 +1,5 @@
 import express from 'express';
-import type { Application, Request, Response } from 'express-serve-static-core';
+import type { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
@@ -25,7 +25,7 @@ app.use(compression());
 // ── Request ID + structured logging ─────────────────────────────────────────
 app.use(requestId);
 
-app.use((req: Request, res: Response, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;

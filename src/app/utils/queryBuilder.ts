@@ -120,7 +120,7 @@ export class QueryBuilder<T> {
    * Default always hides __v and passwordHash.
    */
   fields() {
-    this.modelQuery = this.modelQuery.select('-__v -passwordHash');
+    this.modelQuery = this.modelQuery.select('-__v -passwordHash') as unknown as Query<T[], T>;
     return this;
   }
 
