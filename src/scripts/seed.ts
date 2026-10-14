@@ -812,7 +812,22 @@ async function seed() {
     await Work.insertMany(mappedWorksData);
 
     console.log('✍️  Seeding articles…');
-    await Article.insertMany(articlesData);
+    const categoryMap: Record<string, string> = {
+      'Marketing Tips': 'digital-marketing',
+      'AI Tools': 'business-automation',
+      'Case Studies': 'brand-strategy',
+      'DSZ News': 'brand-strategy',
+    };
+    const mappedArticlesData = articlesData.map((a) => {
+      const targetSlug = categoryMap[a.category] || 'digital-marketing';
+      const matchedService =
+        createdServices.find((s) => s.slug === targetSlug) || createdServices[0];
+      return {
+        ...a,
+        category: matchedService._id,
+      };
+    });
+    await Article.insertMany(mappedArticlesData);
 
     console.log('✍️  Seeding testimonials…');
     await Testimonial.insertMany(testimonialsData);
@@ -827,13 +842,13 @@ async function seed() {
     if (!superAdminExists) {
       await Admin.create({
         name: 'Super Admin',
-        email: 'superadmin@digitalsoftzone.com',
+        email: 'info.digitalsoftzone@gmail.com',
         passwordHash: await argon2.hash('superadmin123'),
         role: 'SUPER_ADMIN',
         isActive: true,
       });
       console.log(
-        '✅ Super Admin seeded (superadmin@digitalsoftzone.com / superadmin123)'
+        '✅ Super Admin seeded (info.digitalsoftzone@gmail.com / superadmin123)'
       );
     }
 
