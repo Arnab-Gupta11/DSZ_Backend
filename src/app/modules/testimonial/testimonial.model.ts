@@ -6,6 +6,7 @@ const testimonialSchema = new Schema<ITestimonial>({
   company: { type: String, required: true },
   role: { type: String, required: true },
   initials: { type: String, required: true },
+  category: { type: String },
   isActive: { type: Boolean, default: true },
   order: { type: Number, default: Date.now }
 }, { timestamps: true });

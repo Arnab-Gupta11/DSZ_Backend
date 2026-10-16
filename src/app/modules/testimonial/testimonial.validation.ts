@@ -6,6 +6,7 @@ const testimonialBodySchema = z.object({
   company: z.string().min(1).max(100),
   role: z.string().min(1).max(100),
   initials: z.string().min(1).max(3),
+  category: z.string().optional(),
   isActive: z.boolean().optional().default(true),
   order: z.number().int().min(0).optional(),
 });

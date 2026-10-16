@@ -6,6 +6,7 @@ export interface ITestimonial {
   company: string;
   role: string;
   initials: string;
+  category?: string;
   isActive: boolean;
   order: number;
   createdAt: Date;
